@@ -1,5 +1,5 @@
 package Plack::Middleware::Auth::AccessToken;
-#ABSTRACT: Secret access token authentification
+#ABSTRACT: Secret access token (aka OAuth Bearer) authentification
 
 use strict;
 use warnings;
@@ -80,13 +80,14 @@ sub unauthorized {
 
 Plack::Middleware::Auth::AccessToken is authentification handler for Plack that
 uses a secret access token. Access tokens are also known as OAuth Bearer tokens.
-Tokens can be provided as query parameters or in a HTTP request header:
+Tokens can be provided both in a HTTP request header or as query parameter:
+
+    https://example.org/api
+    Authorization: bearer ACCESS_TOKEN
 
     https://example.org/api?access_token=ACCESS_TOKEN
 
-    Authorization: bearer ACCESS_TOKEN
-
-The latter is recommended because query parameters may show up on log files.
+The former is recommended because query parameters may show up on log files.
 
 This middleware checks the access token via a callback function and returns an
 error document with HTTP code 401 on failure.
@@ -98,7 +99,8 @@ error document with HTTP code 401 on failure.
 =item authenticator
 
 A required callback function that takes an access token and returns whether the
-token is valid.
+token is valid. The PSGI environment is passed as second argument, but making
+use of it should be bad practice.
 
 =item token_type
 
