@@ -37,7 +37,7 @@ sub call {
     if (defined $token) {
         if ($self->reject_http and $env->{'psgi.url_scheme'} eq 'http') {
             $self->reject_http->($token);
-        } elsif ($self->authenticator->($token)) {
+        } elsif ($self->authenticator->($token, $env)) {
             return $self->app->($env);
         }
     } else {
